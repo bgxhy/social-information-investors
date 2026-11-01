@@ -109,7 +109,9 @@ def main():
                     "web_z": res["web"]["z"] if res.get("web") else None,
                     "shop_z": res["shop"]["z"] if res.get("shop") else None,
                     "status": status})
-        print(r.brand, status)
+        zw = round(res["web"]["z"], 1) if res.get("web") else None
+        zs = round(res["shop"]["z"], 1) if res.get("shop") else None
+        print(r.brand, status, "web_z=", zw, "shop_z=", zs)
 
         if status == "strong" and not recently_pushed(r.brand):
             d = days_to(getattr(r, "next_earnings", None))
