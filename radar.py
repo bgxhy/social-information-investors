@@ -30,7 +30,7 @@ def zscore(s: pd.Series, recent=RECENT, base=BASE):
 def classify(web, shop, t=Z_T):
     w = web is not None and web["z"] >= t
     s = shop is not None and shop["z"] >= t
-    return "strong" if (w and s) else "watch" if (w or s) else "none"
+    return "strong" if (w and s) else "attention" if w else "watch" if s else "none"
 
 
 def fetch(pt, kw, gprop):
@@ -113,12 +113,13 @@ def main():
         zs = round(res["shop"]["z"], 1) if res.get("shop") else None
         print(r.brand, status, "web_z=", zw, "shop_z=", zs)
 
-        if status == "strong" and not recently_pushed(r.brand):
+        if status in ("strong", "attention") and not recently_pushed(r.brand):
             d = days_to(getattr(r, "next_earnings", None))
             link = f"https://trends.google.com/trends/explore?q={quote(r.brand)}&geo=US"
-            msg = (f"## 【异动】{r.ticker if isinstance(r.ticker, str) else '-'}｜{r.brand}\n"
-                   f"> 普通搜索：{fmt(res['web'])}\n"
-                   f"> 购物搜索：{fmt(res['shop'])}\n"
+            tag = "强信号" if status == "strong" else "注意力异常（无购买层确认）"
+           msg = (f"## 【{tag}】{r.ticker if isinstance(r.ticker, str) else '-'}｜{r.brand}\n"
+                   f"> 普通搜索：{fmt(res.get('web'))}\n"
+                   f"> 购物搜索：{fmt(res.get('shop'))}\n"
                    f"> 距财报：{d if d is not None else '未填'} 天\n"
                    f"[查看Trends]({link})\n"
                    f"请人工核实：真需求 / 新闻事件 / 水军")
