@@ -117,7 +117,7 @@ def main():
             d = days_to(getattr(r, "next_earnings", None))
             link = f"https://trends.google.com/trends/explore?q={quote(r.brand)}&geo=US"
             tag = "强信号" if status == "strong" else "注意力异常（无购买层确认）"
-           msg = (f"## 【{tag}】{r.ticker if isinstance(r.ticker, str) else '-'}｜{r.brand}\n"
+            msg = (f"## 【{tag}】{r.ticker if isinstance(r.ticker, str) else '-'}｜{r.brand}\n"
                    f"> 普通搜索：{fmt(res.get('web'))}\n"
                    f"> 购物搜索：{fmt(res.get('shop'))}\n"
                    f"> 距财报：{d if d is not None else '未填'} 天\n"
